@@ -1,0 +1,35 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+main()
+{
+	char a[201],b[201];
+	int x[201],y[201],z[202],la,lb,jin=0,i;
+	gets(a);
+	gets(b);
+	la=strlen(a);
+	lb=strlen(b);
+	for(i=1;i<=la;i++)
+	{
+		x[i]=a[la-i]-'0';
+	}
+	for(i=1;i<=lb;i++)
+	{
+		y[i]=b[lb-i]-'0';
+	}
+	for(i=1;i<=la||i<=lb;i++)
+	{
+		z[i]=x[i]+y[i]+jin;
+		jin=z[i]/10;
+		z[i]=z[i]%10;
+	}
+	if(jin==0)i--;
+	else
+	z[i]=1;
+	while(z[i]==0&&i!=1)
+	{
+		i--;
+	}
+	for(i;i>=1;i--)
+	printf("%d",z[i]);
+}
