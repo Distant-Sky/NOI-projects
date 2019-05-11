@@ -2,12 +2,13 @@
 using namespace std;
 struct node {
 	int a[4][4];
-	int x,y;//×ø±ê
-	int pnt,dep; //¸¸½Úµã Éî¶È
-} data[100],now,tempnode; //½¨Á¢Êı¾İ¿â
+	int x,y;//åæ ‡
+	int pnt,dep; //çˆ¶èŠ‚ç‚¹ æ·±åº¦
+	int pt;
+} data[100],now,tmp; //å»ºç«‹æ•°æ®åº“
 int dx[4] = {0,0,1,-1},dy[4] = {1,-1,0,0};
 int head = 0, tail = 1;
-int succ[4][4] = {{0,0,0,0},{0,1,2,3},{0,8,0,4},{0,7,6,5}};
+int succ[4][4] = {{0,0,0,0},{0,1,2,3},{0,8,0,4},{0,7,6,5}},g;
 void print(int i) {
 	cout<<"node:"<<i<<' '<<"prev:"<<data[i].pnt<<' '<<"depth:"<<data[i].dep<<endl;
 	for (int j = 1; j<=3; j++) {
@@ -26,7 +27,7 @@ bool repeat() {
 		int f = 0;
 		for (int j = 1; j<=3; j++)
 			for (int k = 1; k<=3; k++)
-				if (data[i].a[j][k] != tempnode.a[j][k]) f = 1;
+				if (data[i].a[j][k] != tmp.a[j][k]) f = 1;
 		if (f == 0) return true;
 	}
 	return false;
@@ -35,7 +36,7 @@ bool ifsucc() {
 	int f = 1;
 	for (int j = 0; j<=3; j++)
 		for (int k = 0; k<=3; k++)
-			if (tempnode.a[j][k] != succ[j][k]) f = 0;
+			if (tmp.a[j][k] != succ[j][k]) f = 0;
 	if (f == 1) return true;
 	else return false;
 }
@@ -47,15 +48,21 @@ int bfs() {
 			if (gothere(move)) {
 				tail++;
 				//newnode
-				tempnode = now;
-				tempnode.a[tempnode.y][tempnode.x] = tempnode.a[tempnode.y + dy[move]][tempnode.x + dx[move]];
-				tempnode.x = tempnode.x + dx[move];
-				tempnode.y = tempnode.y + dy[move];
-				tempnode.a[tempnode.y][tempnode.x] = 0;
-				tempnode.dep ++;
-				tempnode.pnt = head;
-				data[tail] = tempnode;
-				if (repeat())tail--;
+				tmp = now;
+				tmp.a[tmp.y][tmp.x]=tmp.a[tmp.y+dy[move]][tmp.x+dx[move]];
+				tmp.x = tmp.x + dx[move];
+				tmp.y = tmp.y + dy[move];
+				tmp.a[tmp.y][tmp.x] = 0;
+				tmp.dep ++;
+				tmp.pnt = head;
+				g=0;for(int i=1;i<4;i++)
+				for(int j=1;j<4;j++)
+				{
+					if(tmp.a[i][j]==succ[i][j]) g++;
+				}
+				tmp.pt=g-tmp.dep;
+				data[tail] = tmp;
+				if (repeat()||data[tail].pt<3)tail--;
 				else if (ifsucc()) return 1;
 				//print(tail);
 			}
@@ -81,8 +88,8 @@ int main() {
 	data[1].x = 2;
 	data[1].y = 3;
 	data[1].pnt = 0;
-	data[1].dep = 0;//³õÊ¼×´Ì¬Èë¶Ó
+	data[1].dep = 0;//åˆå§‹çŠ¶æ€å…¥é˜Ÿ
 	print(1);
 	if (bfs() == 1) out();
-	else cout << "ÎŞ½â£¡";
+	else cout << "æ— è§£ï¼";
 }
